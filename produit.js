@@ -1,18 +1,16 @@
+//Id du produit sélectionné
 const getId = document.location.search.replace(/^.*?\=/, '')
-//Panier
+//contenu du panier
 let panier = (!localStorage.getItem("panier")) ? [] : JSON.parse(localStorage.getItem("panier"))
-/*if(!localStorage.getItem("panier")){
-    panier = []
-    }else{
-    panier = JSON.parse(localStorage.getItem("panier"))
-}*/
-var choosedOption
-const alertChoice = document.querySelector("#alert-objet")
-//Affichage du produit et de la personnalisation
+//Personnalisation de l'objet
+let choosedOption
+
+
+//Récupération des informations du produit
 fetch(`http://localhost:3000/api/teddies/${getId}`)
     .then(response => response.json())
     .then(item => getItem(item))
-//Produit
+//Affichage des informations du produit
 function getItem(item) {
     const findDivPerso = document.querySelector("#item-perso")
     const newElement = document.createElement("div")
@@ -33,10 +31,10 @@ function getItem(item) {
     </div>
     `
     findDivPerso.append(newElement)
-    //Personnalisation
+    //Affichage et choix de la personnalisation
     const itemPers = Object.values(item)[0]
     itemPers.forEach(opt => optItem(opt))
-    //affichage personnalisation
+    //Affichage
     function optItem(opt) {
         const findOpt = document.querySelector("#perso")
         const newOpt = document.createElement("option")
@@ -48,11 +46,12 @@ function getItem(item) {
             choosedOption = event.target.value
         })
     }
-    //Enregistrement objet
+    //Ajout de l'objet au panier
     const addButton = newElement.querySelector(".add-item")
-    addButton.addEventListener("click", event => {
-        //Tableau objet
+    addButton.addEventListener("click", () => {
+        //Controle de selection de l'option
         if (choosedOption === undefined) {
+            const alertChoice = document.querySelector("#alert-objet");
             alertChoice.innerHTML = `
             <div class="alert alert-danger" role="alert">
                 Sélectionner une option avant d'ajouter l'objet dans le panier
