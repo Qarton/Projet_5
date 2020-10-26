@@ -1,22 +1,17 @@
-//Panier
-
+//Contenu du panier dans le local storage
 let panier = (!localStorage.getItem("panier")) ? [] : JSON.parse(localStorage.getItem("panier"))
-const findPanier = document.querySelector("#num_panier")
-const findTotal = document.querySelector("#num_total")
-const form = document.querySelector("#formulaire")
-const idShop = document.querySelector("#idShop")
-
-
-
-const findDiv = document.querySelector("#panier")
-
-var totalPrice = 0
+let totalPrice = 0
+//Affichage du panier
 for (var i = 0; i < panier.length; i++) {
-    var idProduct = panier[i]
+    let idProduct = panier[i]
+    //Récupération des informations des objets du panier en fonction des ID enregistrer dans le local storage
     fetch(`http://localhost:3000/api/teddies/${idProduct}`)
         .then(response => response.json())
         .then(data => panierList(data))
     function panierList(data) {
+        const findDiv = document.querySelector("#panier")
+        const findPanier = document.querySelector("#num_panier")
+        const findTotal = document.querySelector("#num_total")
         //Affichage du prix total et du nombre d'objet
         totalPrice += data.price;
         findPanier.innerHTML = panier.length
@@ -36,7 +31,7 @@ for (var i = 0; i < panier.length; i++) {
         findDiv.append(newElement)
         //Bouton de suppression d'un objet
         const delButton = newElement.querySelector(".del-item")
-        delButton.addEventListener("click", event => {
+        delButton.addEventListener("click", () => {
             function removeElement(panier, data) {
                 var index = panier.indexOf(data._id);
                 if (index > -1) {
@@ -49,9 +44,11 @@ for (var i = 0; i < panier.length; i++) {
         })
     }
 }
-//Enregistrement et envoi du formulaire et enregistrement idShop
+//Enregistrement et envoi du formulaire puis enregsitrement ID commande et montant total
+const form = document.querySelector("#formulaire")
 form.addEventListener("submit", event => {
     event.preventDefault()
+    //Création des données du formulaire
     let formData = {
         contact:
         {
@@ -63,6 +60,7 @@ form.addEventListener("submit", event => {
         },
         products: panier
     }
+    //Envoi des données du formulaire
     fetch('http://localhost:3000/api/teddies/order', {
         method: 'POST',
         headers: {
@@ -72,14 +70,11 @@ form.addEventListener("submit", event => {
     })
         .then(response => response.json())
         .then(data => {
-            //Suppression du panier
+            //Suppression du contenu du panier
             panier.splice(0, panier.length)
             localStorage.setItem("panier", JSON.stringify(panier))
-            //Enregistrement idShop et prix total
+            //Enregistrement ID de la commande et prix total
             window.document.location = './confirm.html' + '?orderId=' + data.orderId + '|' + totalPrice
         })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
 })
 

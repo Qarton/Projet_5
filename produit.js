@@ -1,6 +1,6 @@
 //Id du produit sélectionné
 const getId = document.location.search.replace(/^.*?\=/, '')
-//contenu du panier
+//Contenu du panier dans le local storage
 let panier = (!localStorage.getItem("panier")) ? [] : JSON.parse(localStorage.getItem("panier"))
 //Personnalisation de l'objet
 let choosedOption
