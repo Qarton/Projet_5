@@ -49,6 +49,30 @@ const form = document.querySelector("#formulaire")
 form.addEventListener("submit", event => {
     event.preventDefault()
     //Création des données du formulaire
+    let emailID = form.email.value;
+    atpos = emailID.indexOf("@");
+    dotpos = emailID.lastIndexOf(".");
+    if (form.name.value === "") {
+        alert("Saisir un nom");
+        return false;
+    }
+    if (form.firstName.value === "") {
+        alert("Saisir un prénom");
+        return false;
+    }
+    if (form.address.value === "") {
+        alert("Saisir une adresse");
+        return false;
+    }
+    if (form.city.value === "") {
+        alert("Saisir une ville");
+        return false;
+    }
+    if (atpos < 1 || (dotpos - atpos < 2)) {
+        alert("Adresse mail incorrecte ou vide")
+        document.myForm.EMail.focus();
+        return false;
+    }
     let formData = {
         contact:
         {
