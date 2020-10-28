@@ -4,14 +4,16 @@ const getId = document.location.search.replace(/^.*?\=/, '')
 let panier = (!localStorage.getItem("panier")) ? [] : JSON.parse(localStorage.getItem("panier"))
 //Personnalisation de l'objet
 let choosedOption
-
-
 //Récupération des informations du produit
-fetch(`http://localhost:3000/api/teddies/${getId}`)
-    .then(response => response.json())
-    .then(item => getItem(item))
-//Affichage des informations du produit
-function getItem(item) {
+async function getItem(id) {
+    const api_url = `http://localhost:3000/api/teddies/${id}`;
+    const response = await fetch(api_url);
+    const item = await response.json();
+    return item
+};
+getItem(getId).then(item => showItem(item))
+
+function showItem(item) {
     const findDivPerso = document.querySelector("#item-perso")
     const newElement = document.createElement("div")
     newElement.className = "content"

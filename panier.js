@@ -5,15 +5,20 @@ let totalPrice = 0
 for (var i = 0; i < panier.length; i++) {
     let idProduct = panier[i]
     //Récupération des informations des objets du panier en fonction des ID enregistrer dans le local storage
-    fetch(`http://localhost:3000/api/teddies/${idProduct}`)
-        .then(response => response.json())
-        .then(data => panierList(data))
-    function panierList(data) {
+    async function getItem(id) {
+        const api_url = `http://localhost:3000/api/teddies/${id}`;
+        const response = await fetch(api_url);
+        const item = await response.json();
+        return item
+    };
+    getItem(idProduct).then(item => panierList(item))
+
+    function panierList(item) {
         const findDiv = document.querySelector("#panier")
         const findPanier = document.querySelector("#num_panier")
         const findTotal = document.querySelector("#num_total")
         //Affichage du prix total et du nombre d'objet
-        totalPrice += data.price;
+        totalPrice += item.price;
         findPanier.innerHTML = panier.length
         findTotal.innerHTML = `${totalPrice * 0.01} €`
         //Affichage du contenu du panier
@@ -21,7 +26,7 @@ for (var i = 0; i < panier.length; i++) {
         newElement.innerHTML = `
                 <div class="row">
                 <div class="col-8 p-2 text-center border rounded">
-                    <p class="m-0">Modèle : ${data.name} Prix : ${data.price * 0.01} €</p>
+                    <p class="m-0">Modèle : ${item.name} Prix : ${item.price * 0.01} €</p>
                 </div>
                 <div class="col-4">
                     <button class="del-item btn btn-secondary">Supprimer</button>
@@ -32,13 +37,13 @@ for (var i = 0; i < panier.length; i++) {
         //Bouton de suppression d'un objet
         const delButton = newElement.querySelector(".del-item")
         delButton.addEventListener("click", () => {
-            function removeElement(panier, data) {
-                var index = panier.indexOf(data._id);
+            function removeElement(panier, item) {
+                var index = panier.indexOf(item._id);
                 if (index > -1) {
                     panier.splice(index, 1);
                 }
             }
-            removeElement(panier, data)
+            removeElement(panier, item)
             localStorage.setItem("panier", JSON.stringify(panier))
             newElement.innerHTML = ""
         })
@@ -54,24 +59,23 @@ form.addEventListener("submit", event => {
     dotpos = emailID.lastIndexOf(".");
     if (form.name.value === "") {
         alert("Saisir un nom");
-        return false;
+
     }
     if (form.firstName.value === "") {
         alert("Saisir un prénom");
-        return false;
+
     }
     if (form.address.value === "") {
         alert("Saisir une adresse");
-        return false;
+
     }
     if (form.city.value === "") {
         alert("Saisir une ville");
-        return false;
+
     }
     if (atpos < 1 || (dotpos - atpos < 2)) {
         alert("Adresse mail incorrecte ou vide")
-        document.myForm.EMail.focus();
-        return false;
+
     }
     let formData = {
         contact:
@@ -99,6 +103,6 @@ form.addEventListener("submit", event => {
             localStorage.setItem("panier", JSON.stringify(panier))
             //Enregistrement ID de la commande et prix total
             window.document.location = './confirm.html' + '?orderId=' + data.orderId + '|' + totalPrice
-        })
+        });
 })
 

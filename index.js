@@ -1,15 +1,11 @@
 //Récupération des informations sur les produits
-fetch("http://localhost:3000/api/teddies")
-        .then(response => response.json())
-        .then(items => {items.forEach(item => getItem(item));
-        });
-/*async function getList() {
+async function getList() {
     const api_url = "http://localhost:3000/api/teddies";
     const response = await fetch(api_url);
     const list = await response.json();
     list.forEach(item => getItem(item));
 };
-getList();*/
+getList();
 //Affichage de la liste des produits
 function getItem(item){
     const findDiv = document.querySelector("#items-box");
