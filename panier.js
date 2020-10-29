@@ -51,58 +51,132 @@ for (var i = 0; i < panier.length; i++) {
 }
 //Enregistrement et envoi du formulaire puis enregsitrement ID commande et montant total
 const form = document.querySelector("#formulaire")
+
 form.addEventListener("submit", event => {
     event.preventDefault()
     //Création des données du formulaire
-    let emailID = form.email.value;
-    atpos = emailID.indexOf("@");
-    dotpos = emailID.lastIndexOf(".");
-    if (form.name.value === "") {
-        alert("Saisir un nom");
-
-    }
-    if (form.firstName.value === "") {
-        alert("Saisir un prénom");
-
-    }
-    if (form.address.value === "") {
-        alert("Saisir une adresse");
-
-    }
-    if (form.city.value === "") {
-        alert("Saisir une ville");
-
-    }
-    if (atpos < 1 || (dotpos - atpos < 2)) {
-        alert("Adresse mail incorrecte ou vide")
-
-    }
     let formData = {
         contact:
         {
             firstName: form.firstName.value,
             lastName: form.name.value,
             address: form.address.value,
-            city: form.city.value,
+            city: form.cityCode.value + form.city.value,
             email: form.email.value
         },
         products: panier
     }
-    //Envoi des données du formulaire
-    fetch('http://localhost:3000/api/teddies/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    })
-        .then(response => response.json())
-        .then(data => {
-            //Suppression du contenu du panier
-            panier.splice(0, panier.length)
-            localStorage.setItem("panier", JSON.stringify(panier))
-            //Enregistrement ID de la commande et prix total
-            window.document.location = './confirm.html' + '?orderId=' + data.orderId + '|' + totalPrice
-        });
+
+    var nameErr = addressErr = cityErr = emailErr = cityCodeErr = true;
+    function sendErr(id, color) {
+        document.querySelector(`#${id}`).style.borderColor = color;
+    }
+    
+    if (form.name.value == "") {
+        sendErr("name","red");
+        alert("Champ Nom vide");
+    } else {
+        var regex = /^[a-zA-Z-\s]+$/;
+        if (regex.test(form.name.value) === false) {
+            sendErr("name","red");
+            alert("Champ Nom incorrect");
+        } else {
+            sendErr("name","#ced4da");
+            nameErr = false;
+        }
+    }
+
+    if (form.firstName.value == "") {
+        sendErr("firstName","red");
+        alert("Champ Prénom vide");
+    } else {
+        var regex = /^[a-zA-Z-\s]+$/;
+        if (regex.test(form.firstName.value) === false) {
+            sendErr("firstName","red");
+            alert("Champ Prénom incorrect");
+        } else {
+            sendErr("firstName","#ced4da");
+            firstNameErr = false;
+        }
+    }
+
+    if (form.address.value == "") {
+        sendErr("address","red");
+        alert("Champ Adresse vide");
+    } else {
+        var regex = /^[a-zA-Z-\s]+$/;
+        if (regex.test(form.address.value) === false) {
+            sendErr("address","red");
+            alert("Champ Adresse incorrect");
+        } else {
+            sendErr("address","#ced4da");
+            addressErr = false;
+        }
+    }
+
+    if (form.city.value == "") {
+        sendErr("city","red");
+        alert("Champ Ville vide");
+    } else {
+        var regex = /^[a-zA-Z-\s]+$/;
+        if (regex.test(form.city.value) === false) {
+            sendErr("city","red");
+            alert("Champ Ville incorrect");
+        } else {
+            sendErr("city","#ced4da");
+            cityErr = false;
+        }
+    }
+
+    if (form.cityCode.value == "") {
+        sendErr("cityCode","red");
+        alert("Champ Code Postal vide");
+    } else {
+        var regex = /^[0-9]{5}$/;
+        if (regex.test(form.cityCode.value) === false) {
+            sendErr("cityCode","red");
+            alert("Champ Code Postal incorrect");
+        } else {
+            sendErr("cityCode","#ced4da");
+            cityCodeErr = false;
+        }
+    }
+
+    if (form.email.value == "") {
+        sendErr("email","red");
+        alert("Champ Adresse Email vide");
+    } else {
+        var regex = /^\S+@\S+\.\S+$/;
+        if (regex.test(form.email.value) === false) {
+            sendErr("email","red");
+            alert("Champ Adresse Email incorrect");
+        } else {
+            sendErr("email","#ced4da");
+            emailErr = false;
+        }
+    }
+
+    if ((nameErr || firstNameErr || addressErr || cityErr || emailErr || cityCodeErr) == true) {
+        return false;
+    } else {
+        //Envoi des données du formulaire
+        fetch('http://localhost:3000/api/teddies/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                //Suppression du contenu du panier
+                panier.splice(0, panier.length)
+                localStorage.setItem("panier", JSON.stringify(panier))
+                //Enregistrement ID de la commande et prix total
+                window.document.location = './confirm.html' + '?orderId=' + data.orderId + '|' + totalPrice
+            });
+    }
+
+
 })
 
