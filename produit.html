@@ -2,7 +2,6 @@
 <html lang="fr">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
@@ -22,8 +21,7 @@
                         <i class="fas fa-shopping-cart"></i>
                         ORINOCO
                     </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div id="navbarContent" class="collapse navbar-collapse">
@@ -40,9 +38,7 @@
             </div>
         </div>
     </header>
-    <div id="alert-objet">
 
-    </div>
 
     <div class="container">
         <div class="row my-4">
@@ -54,11 +50,14 @@
 
     <div class="container">
         <form>
+            <!-- Affichage du produit et de l'option de personnalisation -->
             <div id="item-perso"></div>
-            <label for="color">Couleur :</label>
-            <select name="color" id="perso" required>
+            <label for="perso">Couleur :</label>
+            <select name="color" id="perso">
                 <option value="">Aucun</option>
             </select>
+            <!-- Message d'alerte en cas de non sélection de la couleur -->
+            <div id="alert-objet"></div>
         </form>
     </div>
 
@@ -77,8 +76,7 @@
             </div>
         </div>
     </footer>
-    <script src="produit.js"></script>
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="javascript/produit.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
