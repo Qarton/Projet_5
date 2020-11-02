@@ -11,7 +11,10 @@ for (var i = 0; i < panier.length; i++) {
         const item = await response.json();
         return item
     };
-    getItems(idProduct).then(item => panierList(item));
+    getItems(idProduct).then(item => panierList(item))
+        .catch((error) => {
+            console.log(error)
+        });
 
     function panierList(item) {
         const findDiv = document.querySelector("#panier");
@@ -163,7 +166,8 @@ form.addEventListener("submit", event => {
                 localStorage.setItem("panier", JSON.stringify(panier))
                 //Enregistrement ID de la commande et prix total
                 window.document.location = './confirm.html' + '?orderId=' + data.orderId + '|' + totalPrice
-            });
+            })
+            .catch((error) => { console.log(error) });
     };
 });
 

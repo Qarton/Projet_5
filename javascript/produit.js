@@ -11,7 +11,8 @@ async function getItem(id) {
     const item = await response.json();
     return item
 };
-getItem(getId).then(item => showItem(item));
+getItem(getId).then(item => showItem(item))
+    .catch((error) => { console.log(error) });
 //Affichage du produit
 function showItem(item) {
     const findDivPerso = document.querySelector("#item-perso");

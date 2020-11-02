@@ -5,7 +5,7 @@ async function getList() {
     const list = await response.json();
     list.forEach(item => getItem(item));
 };
-getList();
+getList().catch((error) => { console.log(error) });
 //Affichage de la liste des produits
 function getItem(item) {
     const findDiv = document.querySelector("#items-list");
