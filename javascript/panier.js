@@ -1,9 +1,9 @@
 //Contenu du panier dans le local storage
-let panier = (!localStorage.getItem("panier")) ? [] : JSON.parse(localStorage.getItem("panier"))
-let totalPrice = 0
+let panier = (!localStorage.getItem("panier")) ? [] : JSON.parse(localStorage.getItem("panier"));
+let totalPrice = 0;
 //Affichage du panier
 for (var i = 0; i < panier.length; i++) {
-    let idProduct = panier[i]
+    let idProduct = panier[i];
     //Récupération des informations des objets du panier en fonction des ID enregistrer dans le local storage
     async function getItems(id) {
         const api_url = `http://localhost:3000/api/teddies/${id}`;
@@ -11,19 +11,19 @@ for (var i = 0; i < panier.length; i++) {
         const item = await response.json();
         return item
     };
-    getItems(idProduct).then(item => panierList(item))
+    getItems(idProduct).then(item => panierList(item));
 
     function panierList(item) {
-        const findDiv = document.querySelector("#panier")
-        const findPanier = document.querySelector("#num_panier")
-        const findTotal = document.querySelector("#num_total")
+        const findDiv = document.querySelector("#panier");
+        const findPanier = document.querySelector("#num_panier");
+        const findTotal = document.querySelector("#num_total");
         //Affichage du prix total et du nombre d'objet
         totalPrice += item.price;
-        findPanier.innerHTML = panier.length
-        findTotal.innerHTML = `${totalPrice * 0.01} €`
+        findPanier.innerHTML = panier.length;
+        findTotal.innerHTML = `${totalPrice * 0.01} €`;
         //Affichage du contenu du panier
-        const newElement = document.createElement("div")
-        newElement.className = "item"
+        const newElement = document.createElement("div");
+        newElement.className = "item";
         newElement.innerHTML = `
                 <div class="row">
                 <div class="col-8 p-2 text-center border rounded">
@@ -33,10 +33,10 @@ for (var i = 0; i < panier.length; i++) {
                     <button class="del-item btn btn-secondary">Supprimer</button>
                 </div>
                 </div>
-        `
-        findDiv.append(newElement)
+        `;
+        findDiv.append(newElement);
         //Bouton de suppression d'un objet
-        const delButton = newElement.querySelector(".del-item")
+        const delButton = newElement.querySelector(".del-item");
         delButton.addEventListener("click", () => {
             function removeElement(panier, item) {
                 var index = panier.indexOf(item._id);
@@ -44,14 +44,14 @@ for (var i = 0; i < panier.length; i++) {
                     panier.splice(index, 1);
                 }
             }
-            removeElement(panier, item)
-            localStorage.setItem("panier", JSON.stringify(panier))
-            newElement.innerHTML = ""
-        })
-    }
-}
+            removeElement(panier, item);
+            localStorage.setItem("panier", JSON.stringify(panier));
+            newElement.innerHTML = "";
+        });
+    };
+};
 //Enregistrement et envoi du formulaire puis enregsitrement ID commande et montant total
-const form = document.querySelector("#formulaire")
+const form = document.querySelector("#formulaire");
 form.addEventListener("submit", event => {
     event.preventDefault()
     //Création des données du formulaire
@@ -65,20 +65,20 @@ form.addEventListener("submit", event => {
             email: form.email.value
         },
         products: panier
-    }
+    };
     var nameErr = firstNameErr = addressErr = cityErr = emailErr = cityCodeErr = true;
     function sendErr(id) {
         const select = document.querySelector(`#${id}`);
         select.classList.add("border-danger");
         const alertChoice = document.querySelector(`#${id}-alert`);
-        alertChoice.className = "text-danger"
+        alertChoice.className = "text-danger";
         alertChoice.innerHTML = `Vide ou incorrect`;
-    }
+    };
     function sendOk(id) {
         document.querySelector(`#${id}`).classList.remove("border-danger");
         const alertChoice = document.querySelector(`#${id}-alert`);
-        alertChoice.innerHTML = ``
-    }
+        alertChoice.innerHTML = ``;
+    };
     if (form.name.value == "") {
         sendErr("name");
     } else {
@@ -164,6 +164,6 @@ form.addEventListener("submit", event => {
                 //Enregistrement ID de la commande et prix total
                 window.document.location = './confirm.html' + '?orderId=' + data.orderId + '|' + totalPrice
             });
-    }
-})
+    };
+});
 

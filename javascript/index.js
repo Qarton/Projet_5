@@ -9,8 +9,8 @@ getList();
 //Affichage de la liste des produits
 function getItem(item) {
     const findDiv = document.querySelector("#items-list");
-    const newElement = document.createElement("div")
-    newElement.className = "item"
+    const newElement = document.createElement("div");
+    newElement.className = "item";
     newElement.innerHTML = `
     <div class="row p-1 m-5 border rounded">
         <div class="col-lg-3 m-auto">
@@ -27,14 +27,14 @@ function getItem(item) {
                 </div>
             </div>
     </div>
-    `
-    findDiv.append(newElement)
+    `;
+    findDiv.append(newElement);
     //Enregistrement de l'ID de l'objet selectionne et ouverture de la page de personnalisation
-    const persButton = newElement.querySelector(".pers-item")
+    const persButton = newElement.querySelector(".pers-item");
     persButton.addEventListener("click", () => {
         window.document.location = './produit.html' + '?id=' + item._id
-    })
-}
+    });
+};
 
 
 
